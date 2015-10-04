@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/heroImageViewP"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/check_boxes"
+
+        android:scaleType="fitCenter" />
+
+    <ListView
+        android:id="@+id/listViewP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#9E9E9E"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"></ListView>
+
+    <TextView
+        android:id="@+id/stickyViewP"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Lista de Cotejo"
+        android:textColor="#222"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <SearchView
+        android:id="@+id/stickyView1P"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+
+        android:text="Buscar"
+
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</FrameLayout>

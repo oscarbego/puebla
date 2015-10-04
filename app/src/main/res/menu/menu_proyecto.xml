@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.app.bego.headerimage.Proyecto">
+
+    <item android:id="@+id/add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="add"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/edit"
+        android:title="edit"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/delete"
+        android:title="delete"
+        android:orderInCategory="3"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>
