@@ -56,12 +56,31 @@ public class MainActivity extends AppCompatActivity {
     public String[] archivos;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         I = this;
+
+
+        //-----
+
+
+        File mPath = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + "/AppPuebla/");
+
+        if(!mPath.exists())
+            mPath.mkdir();
+        else
+            System.out.println("El folder ya existe");
+
+
+
+
+        //-----
 
         //archivos = fileList();
 
@@ -317,10 +336,14 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean fileExstSD(String fileName)
     {
+
+        File ruta_sd = Environment.getExternalStorageDirectory();
+
         boolean bande;
 
 
-        File f = new File(getExternalFilesDir(null), fileName);
+        //File f = new File(getExternalFilesDir(null), fileName);
+        File f = new File(ruta_sd + "/AppPuebla/", fileName);
 
         System.out.println("----------> " + getExternalFilesDir(null));
         //File file = new File(Environment.getExternalStorageDirectory() + "/book1/page2.html");
@@ -340,11 +363,14 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Save SD");
             try
             {
+
+
                 File ruta_sd = Environment.getExternalStorageDirectory();
 
 
                 //File f = new File(ruta_sd.getAbsolutePath(), "datos\\prueba.txt");
-                File f = new File(getExternalFilesDir(null), file);
+                //File f = new File(getExternalFilesDir(null) + "/AppPuebla/", file);
+                File f = new File(ruta_sd + "/AppPuebla/", file);
 
                 OutputStreamWriter fout =
                         new OutputStreamWriter(
@@ -373,8 +399,8 @@ public class MainActivity extends AppCompatActivity {
                 File ruta_sd = Environment.getExternalStorageDirectory();
 
                 //File f = new File(ruta_sd.getAbsolutePath(), "prueba.txt");
-                File f = new File(getExternalFilesDir(null), file);
-
+                //File f = new File(getExternalFilesDir(null) , file);
+                File f = new File(ruta_sd + "/AppPuebla/" , file);
 
                 BufferedReader fin =
                         new BufferedReader(
@@ -465,6 +491,16 @@ public class MainActivity extends AppCompatActivity {
                         String cade = g.toJson(lista);
                         System.out.println(" 367 --------> " + cade);
                         saveSD("notas.txt", cade);
+
+                        File mPath = new File(Environment.getExternalStorageDirectory()
+                                .getAbsolutePath() + "/AppPuebla/" + mProyecto.folder + "/");
+
+                        if(!mPath.exists())
+                            mPath.mkdir();
+                        else
+                            System.out.println("El folder ya existe");
+
+
 
                         va.notifyDataSetChanged();
                         Intent i = new Intent(getBaseContext(), Proyecto.class);

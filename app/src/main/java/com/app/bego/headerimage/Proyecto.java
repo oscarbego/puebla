@@ -89,8 +89,7 @@ public class Proyecto extends AppCompatActivity {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState)
-            {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
 
@@ -239,7 +238,8 @@ public class Proyecto extends AppCompatActivity {
 
 
                 //File f = new File(ruta_sd.getAbsolutePath(), "datos\\prueba.txt");
-                File f = new File(getExternalFilesDir(null), file);
+                //File f = new File(getExternalFilesDir(null), file);
+                File f = new File(ruta_sd + "/AppPuebla/", file);
 
                 OutputStreamWriter fout =
                         new OutputStreamWriter(
@@ -347,58 +347,41 @@ public class Proyecto extends AppCompatActivity {
                     //startActivity(intent);
                     //startActivityForResult(intent, code);
 
+
                     // dialog
+                    if (MainActivity.mProyecto.listaCotejo.get(pos).esta)
+                    {
+                        final AlertDialog.Builder imageDialog = new AlertDialog.Builder(P);
+                        View layout = inflater.inflate(R.layout.fullimage_dialog,
+                            (ViewGroup) findViewById(R.id.layout_root));
+                        ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
 
-                    final AlertDialog.Builder imageDialog = new AlertDialog.Builder(P);
-
-                    View layout = inflater.inflate(R.layout.fullimage_dialog,
-
-                    (ViewGroup) findViewById(R.id.layout_root));
-
-                    ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
-
-                    //String strPath = "/mnt/sdcard/picture/"; //+arrData[position][2].toString();
-                    String strPath = Environment.getExternalStorageDirectory() + "/"
+                        //String strPath = "/mnt/sdcard/picture/"; //+arrData[position][2].toString();
+                        String strPath = Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
                             + lista.get(pos).nombre + ".jpg";
 
-                    Bitmap bm = BitmapFactory.decodeFile(strPath);
+                        Bitmap bm = BitmapFactory.decodeFile(strPath);
+                        int width = 200;
+                        int height = 200;
+                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bm, width, height, true);
+                        image.setImageBitmap(resizedbitmap);
 
-                    int width=200;
+                        //imageDialog.setIcon(android.R.drawable.btn_star_big_on);
 
-                    int height=200;
+                        imageDialog.setTitle("Imagen : " + lista.get(pos).nombre + ".jpg");
+                        imageDialog.setView(layout);
+                        imageDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bm, width, height, true);
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
 
-                    image.setImageBitmap(resizedbitmap);
+                        });
 
-                    //imageDialog.setIcon(android.R.drawable.btn_star_big_on);
-
-                    imageDialog.setTitle("Imagen : " + lista.get(pos).nombre + ".jpg" );
-
-                    imageDialog.setView(layout);
-
-                    imageDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-
-                        }
-
-
-
-                    });
-
-
-
-
-
-                    imageDialog.create();
-                    imageDialog.show();
-
+                        imageDialog.create();
+                        imageDialog.show();
+                    }
                     //------------------------------------
-
 
                 }
             });
@@ -414,13 +397,11 @@ public class Proyecto extends AppCompatActivity {
                                 + lista.get(pos).nombre + ".jpg";
 
 
-
-                        System.out.println(Environment.getExternalStorageDirectory() + "/"
+                        System.out.println(Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
                                 + lista.get(pos).nombre + ".jpg");
 
 
-
-                        output = Environment.getExternalStorageDirectory() + "/"
+                        output = Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
                                 + lista.get(pos).nombre + ".jpg";
 
                         File file = new File(output);
@@ -436,16 +417,14 @@ public class Proyecto extends AppCompatActivity {
 
                         lista.get(pos).addFoto();
 
-
-
                     }
                     else{
                         System.out.println("No Foto");
 
                         lista.get(pos).delFoto();
 
-                        //String cade = g.toJson(MainActivity.lista);
-                        //saveSD("notas.txt", cade);
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
                     }
                 }
             });
