@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -31,13 +35,14 @@ import java.util.ArrayList;
 
 public class Proyecto extends AppCompatActivity {
 
-
     private TextView stickyView;
-    private SearchView stickyView1;
+    //private SearchView stickyView1;
     private ListView listView;
     private View heroImageView;
     private View stickyViewSpacer;
-    private View stickyViewSpacer1;
+
+
+
 
     private ArrayList<Elementos> lista; // = new ArrayList<>();
 
@@ -45,11 +50,12 @@ public class Proyecto extends AppCompatActivity {
 
     VersionAdapter va;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proyecto);
+
+
 
 
         lista = MainActivity.mProyecto.listaCotejo;
@@ -57,14 +63,13 @@ public class Proyecto extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listViewP);
         heroImageView = findViewById(R.id.heroImageViewP);
         stickyView = (TextView) findViewById(R.id.stickyViewP);
-        stickyView1 = (SearchView) findViewById(R.id.stickyView1P);
+        //stickyView1 = (SearchView) findViewById(R.id.stickyView1P);
 
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listHeader = inflater.inflate(R.layout.list_header2, null);
 
         stickyViewSpacer  = listHeader.findViewById(R.id.stickyViewPlaceholder);
-        stickyViewSpacer1  = listHeader.findViewById(R.id.stickyViewPlaceholder1);
 
 
 
@@ -73,11 +78,14 @@ public class Proyecto extends AppCompatActivity {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            public void onScrollStateChanged(AbsListView view, int scrollState)
+            {
+
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
 
                 /* Check if the first item is already reached to top.*/
                 if (listView.getFirstVisiblePosition() == 0) {
@@ -88,15 +96,17 @@ public class Proyecto extends AppCompatActivity {
                     }
 
                     int heroTopY = stickyViewSpacer.getTop();
-                    stickyView1.setY(Math.max(0, heroTopY + topY));
+                    stickyView.setY(Math.max(0, heroTopY + topY));
 
-                    heroTopY = stickyViewSpacer1.getTop();
+                    //heroTopY = stickyViewSpacer1.getTop();
                     //stickyView.setY(Math.max(70, heroTopY  + topY ));
-                    stickyView.setY(Math.max(70, heroTopY + topY));
+                    //stickyView.setY(Math.max(70, heroTopY + topY));
 
                     /* Set the image to scroll half of the amount that of ListView */
                     heroImageView.setY(topY * 0.5f);
+
                 }
+
             }
         });
 
@@ -108,8 +118,7 @@ public class Proyecto extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent i = new Intent(getBaseContext(), Proyecto.class);
-                startActivity(i);
+
             }
         });
 
@@ -267,6 +276,9 @@ public class Proyecto extends AppCompatActivity {
         return sdDisponible && sdAccesoEscritura;
     }
 
+
+
+
     class VersionAdapter extends BaseAdapter
     {
 
@@ -293,20 +305,69 @@ public class Proyecto extends AppCompatActivity {
 
 
             View listItem = convertView;
-            int pos = position;
+            final int pos = position;
 
             if (listItem == null) {
-                listItem =  getLayoutInflater().inflate(R.layout.lista_elemento, null);
+                listItem =  getLayoutInflater().inflate(R.layout.row3, null);
             }
 
             // Initialize the views in the layout
             ImageView iv = (ImageView) listItem.findViewById(R.id.img_miniatura);
             TextView tvTitle = (TextView) listItem.findViewById(R.id.proyecto);
             TextView tvDesc = (TextView) listItem.findViewById(R.id.etiqueta);
+            Switch mySwitch = (Switch) listItem.findViewById(R.id.mySwitch);
+            Button btnVerFoto = (Button) listItem.findViewById(R.id.btnVerFoto);
+
+
+            btnVerFoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Ver Foto");
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    //code = SELECT_PICTURE;
+                    startActivity(intent);
+                    //startActivityForResult(intent, code);
+                }
+            });
+
+            mySwitch.setChecked(lista.get(pos).esta);
+
+            mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+
+                        String output = getExternalFilesDir(null).getAbsolutePath() + "/"
+                                + lista.get(pos).nombre + ".jpj";
+                        System.out.println("Foto");
+                        Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+                        startActivity(intent);
+
+                        lista.get(pos).addFoto();
+
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
+
+                    }
+                    else{
+                        System.out.println("No Foto");
+
+                        lista.get(pos).delFoto();
+
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
+                    }
+                }
+            });
+
+
+
 
             // Set the views in the layout
-            iv.setBackgroundResource(R.drawable.check_boxes);
-            tvTitle.setText(lista.get(pos).nombre);
+            //iv.setBackgroundResource(R.drawable.check_boxes);
+            tvTitle.setText("Nombre: " + lista.get(pos).nombre);
             //tvDesc.setText(desc[pos]);
 
             return listItem;

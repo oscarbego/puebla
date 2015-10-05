@@ -22,13 +22,24 @@ public class MProyecto {
 class Elementos
 {
     String nombre;
-    boolean esta;
-    String foto; // puede ser una lista
+    boolean esta = false;
+    String foto = ""; // puede ser una lista
 
     public Elementos(String e)
     {
-
         nombre = e;
+    }
+
+    public void addFoto()
+    {
+        esta = true;
+        foto = nombre + ".jpg";
+    }
+
+    public void delFoto()
+    {
+        esta = false;
+        foto = "";
     }
 
 }
