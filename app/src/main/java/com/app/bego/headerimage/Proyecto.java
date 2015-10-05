@@ -42,11 +42,14 @@ import java.util.ArrayList;
 
 public class Proyecto extends AppCompatActivity {
 
+    Proyecto P;
+
     private TextView stickyView;
     //private SearchView stickyView1;
     private ListView listView;
     private View heroImageView;
     private View stickyViewSpacer;
+
 
 
 
@@ -57,11 +60,12 @@ public class Proyecto extends AppCompatActivity {
 
     VersionAdapter va;
 
+    LayoutInflater inflater;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proyecto);
-
 
 
 
@@ -73,7 +77,7 @@ public class Proyecto extends AppCompatActivity {
         //stickyView1 = (SearchView) findViewById(R.id.stickyView1P);
 
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listHeader = inflater.inflate(R.layout.list_header2, null);
 
         stickyViewSpacer  = listHeader.findViewById(R.id.stickyViewPlaceholder);
@@ -131,6 +135,7 @@ public class Proyecto extends AppCompatActivity {
 
         setTitle("Prj: " + MainActivity.mProyecto.titulo);
 
+        P = this;
     }
 
     @Override
@@ -286,8 +291,13 @@ public class Proyecto extends AppCompatActivity {
 
 
 
+
+    //final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+
     class VersionAdapter extends BaseAdapter
     {
+
 
         @Override
         public int getCount() {
@@ -331,11 +341,65 @@ public class Proyecto extends AppCompatActivity {
                 public void onClick(View v) {
                     System.out.println("Ver Foto");
 
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    //Intent intent = new Intent(Intent.ACTION_PICK,
+                    //        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                     //code = SELECT_PICTURE;
                     //startActivity(intent);
-                    startActivityForResult(intent, code);
+                    //startActivityForResult(intent, code);
+
+                    // dialog
+
+                    final AlertDialog.Builder imageDialog = new AlertDialog.Builder(P);
+
+                    View layout = inflater.inflate(R.layout.fullimage_dialog,
+
+                    (ViewGroup) findViewById(R.id.layout_root));
+
+                    ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
+
+                    //String strPath = "/mnt/sdcard/picture/"; //+arrData[position][2].toString();
+                    String strPath = Environment.getExternalStorageDirectory() + "/"
+                            + lista.get(pos).nombre + ".jpg";
+
+                    Bitmap bm = BitmapFactory.decodeFile(strPath);
+
+                    int width=200;
+
+                    int height=200;
+
+                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bm, width, height, true);
+
+                    image.setImageBitmap(resizedbitmap);
+
+                    //imageDialog.setIcon(android.R.drawable.btn_star_big_on);
+
+                    imageDialog.setTitle("Imagen : " + lista.get(pos).nombre + ".jpg" );
+
+                    imageDialog.setView(layout);
+
+                    imageDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+
+                        }
+
+
+
+                    });
+
+
+
+
+
+                    imageDialog.create();
+                    imageDialog.show();
+
+                    //------------------------------------
+
+
                 }
             });
 

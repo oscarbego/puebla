@@ -8,7 +8,7 @@ public class MProyecto {
     public String titulo;
 
     public ArrayList<Elementos> listaCotejo;
-    public String folder;
+    public String folder = "";
 
     public MProyecto(String t)
     {
