@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -28,8 +32,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -324,10 +331,11 @@ public class Proyecto extends AppCompatActivity {
                 public void onClick(View v) {
                     System.out.println("Ver Foto");
 
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                     //code = SELECT_PICTURE;
-                    startActivity(intent);
-                    //startActivityForResult(intent, code);
+                    //startActivity(intent);
+                    startActivityForResult(intent, code);
                 }
             });
 
@@ -339,16 +347,32 @@ public class Proyecto extends AppCompatActivity {
                     if(isChecked){
 
                         String output = getExternalFilesDir(null).getAbsolutePath() + "/"
-                                + lista.get(pos).nombre + ".jpj";
+                                + lista.get(pos).nombre + ".jpg";
+
+
+
+                        System.out.println(Environment.getExternalStorageDirectory() + "/"
+                                + lista.get(pos).nombre + ".jpg");
+
+
+
+                        output = Environment.getExternalStorageDirectory() + "/"
+                                + lista.get(pos).nombre + ".jpg";
+
+                        File file = new File(output);
+                        Uri outputFileUri = Uri.fromFile(file);
+
                         System.out.println("Foto");
                         Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-                        startActivity(intent);
+                        System.out.println("..........--> " + outputFileUri);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                        intent.putExtra("return-data", true);
+                        //startActivity(intent);
+                        startActivityForResult(intent, code);
 
                         lista.get(pos).addFoto();
 
-                        String cade = g.toJson(MainActivity.lista);
-                        saveSD("notas.txt", cade);
+
 
                     }
                     else{
@@ -356,8 +380,8 @@ public class Proyecto extends AppCompatActivity {
 
                         lista.get(pos).delFoto();
 
-                        String cade = g.toJson(MainActivity.lista);
-                        saveSD("notas.txt", cade);
+                        //String cade = g.toJson(MainActivity.lista);
+                        //saveSD("notas.txt", cade);
                     }
                 }
             });
@@ -377,6 +401,90 @@ public class Proyecto extends AppCompatActivity {
     }
 
 
+
+    Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    int code = TAKE_PICTURE;
+
+
+    private static int TAKE_PICTURE = 1;
+    private static int SELECT_PICTURE = 2;
+
+
+    private String name = "";
+
+    /**
+     * Funci—n que se ejecuta cuando concluye el
+     * intent en el que se solicita una imagen
+     * ya sea de la c‡mara o de la galer’a
+     */
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String cade = g.toJson(MainActivity.lista);
+        saveSD("notas.txt", cade);
+
+
+        /**
+         * Se revisa si la imagen viene de la c‡mara (TAKE_PICTURE)
+         * o de la galer’a (SELECT_PICTURE)
+         */
+        if (requestCode == TAKE_PICTURE) {
+            /**
+             * Si se reciben datos en el intent tenemos una
+             * vista previa (thumbnail)
+             */
+            if (data != null) {
+                /**
+                 * En el caso de una vista previa, obtenemos el
+                 * extra ÒdataÓ del intent y
+                 * lo mostramos en el ImageView
+                 */
+                if (data.hasExtra("data")) {
+                    //ImageView iv = (ImageView)findViewById(R.id.imgView);
+                    //iv.setImageBitmap((Bitmap) data.getParcelableExtra("data"));
+                }
+                /**
+                 * De lo contrario es una imagen completa
+                 */
+            } else {
+                /**
+                 * A partir del nombre del archivo ya definido lo
+                 * buscamos y creamos el bitmap
+                 * para el ImageView
+                 */
+                ////ImageView iv = (ImageView)findViewById(R.id.imgView);
+                ////iv.setImageBitmap(BitmapFactory.decodeFile(name));
+                /**
+                 * Para guardar la imagen en la galer’a, utilizamos
+                 * una conexi—n a un MediaScanner
+                 */
+                new MediaScannerConnection.MediaScannerConnectionClient() {
+                    private MediaScannerConnection msc = null; {
+                        msc = new MediaScannerConnection(getApplicationContext(), this); msc.connect();
+                    }
+                    public void onMediaScannerConnected() {
+                        msc.scanFile(name, null);
+                    }
+                    public void onScanCompleted(String path, Uri uri) {
+                        msc.disconnect();
+                    }
+                };
+            }
+            /**
+             * Recibimos el URI de la imagen y construimos un Bitmap
+             * a partir de un stream de Bytes
+             */
+        } else if (requestCode == SELECT_PICTURE){
+            Uri selectedImage = data.getData();
+            InputStream is;
+            try {
+                is = getContentResolver().openInputStream(selectedImage);
+                BufferedInputStream bis = new BufferedInputStream(is);
+                Bitmap bitmap = BitmapFactory.decodeStream(bis);
+                ////ImageView iv = (ImageView)findViewById(R.id.imgView);
+                ////iv.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {}
+        }
+    }
 
 
 }
