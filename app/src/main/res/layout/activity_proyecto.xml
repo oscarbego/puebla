@@ -6,7 +6,7 @@
         android:id="@+id/heroImageViewP"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@drawable/check_boxes"
+        android:background="@drawable/splash3"
 
         android:scaleType="fitCenter" />
 
@@ -20,19 +20,16 @@
 
 
 
-    <EditText
+    <TextView
         android:id="@+id/stickyViewP"
-        android:hint="Buscar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#fff"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text=""
+        android:text="Lista de Elementos"
         android:textColor="#222"
         android:textSize="20sp"
         android:textStyle="bold" />
-
-
 
 </FrameLayout>

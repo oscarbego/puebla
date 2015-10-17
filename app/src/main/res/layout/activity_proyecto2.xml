@@ -3,31 +3,34 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/heroImageView"
+        android:id="@+id/heroImageViewP"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="90dp"
         android:background="@drawable/splash3"
+
         android:scaleType="fitCenter" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/listViewP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#9E9E9E"
         android:dividerHeight="1dp"
         android:scrollbars="none"></ListView>
 
+
+
+
     <TextView
-        android:id="@+id/stickyView"
+        android:id="@+id/stickyViewP"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#fff"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text="Lista de Proyectos"
+        android:text="Lista de Laboratorios"
         android:textColor="#222"
         android:textSize="20sp"
         android:textStyle="bold" />
-
 
 </FrameLayout>

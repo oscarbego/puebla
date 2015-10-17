@@ -9,15 +9,7 @@
         android:orderInCategory="1"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/edit"
-        android:title="edit"
-        android:orderInCategory="2"
-        app:showAsAction="never"/>
 
-    <item android:id="@+id/delete"
-        android:title="delete"
-        android:orderInCategory="3"
-        app:showAsAction="never"/>
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

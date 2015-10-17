@@ -12,14 +12,7 @@
         android:title="search"
         android:orderInCategory="2"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/edit"
-        android:title="edit"
-        android:orderInCategory="3"
-        app:showAsAction="never"/>
-    <item android:id="@+id/delete"
-        android:title="delete"
-        android:orderInCategory="4"
-        app:showAsAction="never"/>
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"

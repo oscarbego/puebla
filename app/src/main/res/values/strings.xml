@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">SDIP</string>
+    <string name="app_name">ChckLabs</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_proyecto">Proyecto</string>
+    <string name="title_activity_laboratorios">Laboratorios</string>
 </resources>

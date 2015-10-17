@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/img_miniatura"
-            android:layout_width="match_parent"
+            android:layout_width="70dp"
             android:layout_height="@dimen/altura_miniatura_hotel"
             android:layout_alignParentTop="true"
             android:background="@color/background_material_light" />

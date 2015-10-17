@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +27,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,14 +43,12 @@ public class Proyecto extends AppCompatActivity {
     Proyecto P;
 
     private TextView stickyView;
-    //private SearchView stickyView1;
     private ListView listView;
     private View heroImageView;
     private View stickyViewSpacer;
 
 
-
-
+    boolean entrada = false;
 
     private ArrayList<Elementos> lista; // = new ArrayList<>();
 
@@ -68,8 +64,40 @@ public class Proyecto extends AppCompatActivity {
         setContentView(R.layout.activity_proyecto);
 
 
+        //String lab = intent.getStringExtra("lab");
+        String lab = getIntent().getExtras().getString("lab");
 
-        lista = MainActivity.mProyecto.listaCotejo;
+        System.out.println(".-.-.-.- Lab " + lab);
+
+        if(lab != null && !lab.equals(""))
+        {
+            if(lab.equals("Q"))
+                lista = MainActivity.mProyecto.labQ.elementos;
+
+            if(lab.equals("F"))
+                lista = MainActivity.mProyecto.labF.elementos;
+
+            if(lab.equals("B"))
+                lista = MainActivity.mProyecto.labB.elementos;
+
+
+
+
+            if(lab.equals("TL"))
+                lista = MainActivity.mProyecto.labTL.elementos;
+
+
+            if(lab.equals("ST"))
+                lista = MainActivity.mProyecto.labST.elementos;
+
+
+            if(lab.equals("SG"))
+                lista = MainActivity.mProyecto.labSG.elementos;
+
+        }
+        else
+            lista = new ArrayList<>();
+
 
         listView = (ListView) findViewById(R.id.listViewP);
         heroImageView = findViewById(R.id.heroImageViewP);
@@ -135,15 +163,25 @@ public class Proyecto extends AppCompatActivity {
         setTitle("Prj: " + MainActivity.mProyecto.titulo);
 
         P = this;
+
+        va.notifyDataSetChanged();
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_proyecto, menu);
 
-
         return true;
+    }
+    */
+
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, Laboratorios.class);
+        startActivity(i);
     }
 
     @Override
@@ -184,7 +222,7 @@ public class Proyecto extends AppCompatActivity {
                     if(!inputName.equals(""))
                     {
 
-                        lista.add(new Elementos(inputName));
+                        lista.add(new Elementos("", inputName));
 
                         String cade = g.toJson(MainActivity.lista);
                         System.out.println(" 367 --------> " + cade);
@@ -320,7 +358,6 @@ public class Proyecto extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-
             View listItem = convertView;
             final int pos = position;
 
@@ -332,66 +369,84 @@ public class Proyecto extends AppCompatActivity {
             ImageView iv = (ImageView) listItem.findViewById(R.id.img_miniatura);
             TextView tvTitle = (TextView) listItem.findViewById(R.id.proyecto);
             TextView tvDesc = (TextView) listItem.findViewById(R.id.etiqueta);
-            Switch mySwitch = (Switch) listItem.findViewById(R.id.mySwitch);
+            final Switch mySwitch = (Switch) listItem.findViewById(R.id.mySwitch);
             Button btnVerFoto = (Button) listItem.findViewById(R.id.btnVerFoto);
 
 
             btnVerFoto.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  System.out.println("Ver Foto");
+
+                                                  //Intent intent = new Intent(Intent.ACTION_PICK,
+                                                  //        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                                                  //code = SELECT_PICTURE;
+                                                  //startActivity(intent);
+                                                  //startActivityForResult(intent, code);
+
+
+                                                  // dialog
+
+                                                  //if (MainActivity.mProyecto.listaCotejo.get(pos).esta)
+                                                  if (lista.get(pos).esta) {
+
+                                                      System.out.println();
+
+                                                      final AlertDialog.Builder imageDialog = new AlertDialog.Builder(P);
+                                                      View layout = inflater.inflate(R.layout.fullimage_dialog,
+                                                              (ViewGroup) findViewById(R.id.layout_root));
+                                                      ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
+
+                                                      //String strPath = "/mnt/sdcard/picture/"; //+arrData[position][2].toString();
+                                                      String strPath = Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
+                                                              + lista.get(pos).nombre + ".jpg";
+
+                                                      Bitmap bm = BitmapFactory.decodeFile(strPath);
+                                                      int width = 200;
+                                                      int height = 200;
+                                                      Bitmap resizedbitmap = Bitmap.createScaledBitmap(bm, width, height, true);
+                                                      image.setImageBitmap(resizedbitmap);
+
+                                                      //imageDialog.setIcon(android.R.drawable.btn_star_big_on);
+
+                                                      imageDialog.setTitle("Imagen : " + lista.get(pos).nombre + ".jpg");
+                                                      imageDialog.setView(layout);
+                                                      imageDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                                                          public void onClick(DialogInterface dialog, int which) {
+                                                              dialog.dismiss();
+                                                          }
+
+                                                      });
+
+                                                      imageDialog.create();
+                                                      imageDialog.show();
+                                                  }
+                                                  //------------------------------------
+
+                                              }
+                                          }
+            );
+
+            File estaArc = new File(Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
+                    + lista.get(pos).nombre + ".jpg");
+
+            //if(estaArc.exists())
+            //    mySwitch.setChecked(true);
+
+            mySwitch.setChecked(lista.get(pos).esta && estaArc.exists());
+
+            System.out.println("ESTA " + lista.get(pos).esta + " " + pos);
+            System.out.println("ESTA " + lista.get(pos).nombre);
+            System.out.println("OK " + lista.get(pos).ok);
+
+
+
+            mySwitch.setOnDragListener(new View.OnDragListener() {
                 @Override
-                public void onClick(View v) {
-                    System.out.println("Ver Foto");
+                public boolean onDrag(View v, DragEvent event) {
 
-                    //Intent intent = new Intent(Intent.ACTION_PICK,
-                    //        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                    //code = SELECT_PICTURE;
-                    //startActivity(intent);
-                    //startActivityForResult(intent, code);
-
-
-                    // dialog
-                    if (MainActivity.mProyecto.listaCotejo.get(pos).esta)
-                    {
-                        final AlertDialog.Builder imageDialog = new AlertDialog.Builder(P);
-                        View layout = inflater.inflate(R.layout.fullimage_dialog,
-                            (ViewGroup) findViewById(R.id.layout_root));
-                        ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
-
-                        //String strPath = "/mnt/sdcard/picture/"; //+arrData[position][2].toString();
-                        String strPath = Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
-                            + lista.get(pos).nombre + ".jpg";
-
-                        Bitmap bm = BitmapFactory.decodeFile(strPath);
-                        int width = 200;
-                        int height = 200;
-                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bm, width, height, true);
-                        image.setImageBitmap(resizedbitmap);
-
-                        //imageDialog.setIcon(android.R.drawable.btn_star_big_on);
-
-                        imageDialog.setTitle("Imagen : " + lista.get(pos).nombre + ".jpg");
-                        imageDialog.setView(layout);
-                        imageDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-
-                        });
-
-                        imageDialog.create();
-                        imageDialog.show();
-                    }
-                    //------------------------------------
-
-                }
-            });
-
-            mySwitch.setChecked(lista.get(pos).esta);
-
-            mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
+                    if (mySwitch.isChecked() == true) {
 
                         String output = getExternalFilesDir(null).getAbsolutePath() + "/"
                                 + lista.get(pos).nombre + ".jpg";
@@ -408,7 +463,7 @@ public class Proyecto extends AppCompatActivity {
                         Uri outputFileUri = Uri.fromFile(file);
 
                         System.out.println("Foto");
-                        Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         System.out.println("..........--> " + outputFileUri);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
                         intent.putExtra("return-data", true);
@@ -416,25 +471,103 @@ public class Proyecto extends AppCompatActivity {
                         startActivityForResult(intent, code);
 
                         lista.get(pos).addFoto();
-
-                    }
-                    else{
-                        System.out.println("No Foto");
-
-                        lista.get(pos).delFoto();
+                        lista.get(pos).esta = true;
+                        lista.get(pos).ok = "si";
 
                         String cade = g.toJson(MainActivity.lista);
                         saveSD("notas.txt", cade);
+
+                    } else {
+
+                        System.out.println("No Foto");
+
+                        lista.get(pos).delFoto();
+                        lista.get(pos).esta = false;
+                        lista.get(pos).ok = "no";
+
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
+
+                    }
+
+
+                    return true;
+                }
+            });
+
+
+
+            mySwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Entro al onCheckedChanged");
+
+
+                    if (mySwitch.isChecked() == true) {
+
+                        String output = getExternalFilesDir(null).getAbsolutePath() + "/"
+                                + lista.get(pos).nombre + ".jpg";
+
+
+                        System.out.println(Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
+                                + lista.get(pos).nombre + ".jpg");
+
+
+                        output = Environment.getExternalStorageDirectory() + "/AppPuebla/" + MainActivity.mProyecto.folder + "/"
+                                + lista.get(pos).nombre + ".jpg";
+
+                        File file = new File(output);
+                        Uri outputFileUri = Uri.fromFile(file);
+
+                        System.out.println("Foto");
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        System.out.println("..........--> " + outputFileUri);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                        intent.putExtra("return-data", true);
+                        //startActivity(intent);
+                        startActivityForResult(intent, code);
+
+                        lista.get(pos).addFoto();
+                        lista.get(pos).esta = true;
+                        lista.get(pos).ok = "si";
+
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
+
+                    } else {
+
+                        System.out.println("No Foto");
+
+                        lista.get(pos).delFoto();
+                        lista.get(pos).esta = false;
+                        lista.get(pos).ok = "no";
+
+                        String cade = g.toJson(MainActivity.lista);
+                        saveSD("notas.txt", cade);
+
                     }
                 }
             });
+
+            mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                    @Override
+                                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                                                        System.out.println("onCheckedChanged " + isChecked);
+                                                        System.out.println("onCheckedChanged " + mySwitch.isChecked());
+
+                                                    }
+                                                }
+            );
+
+
 
 
 
 
             // Set the views in the layout
             //iv.setBackgroundResource(R.drawable.check_boxes);
-            tvTitle.setText("Nombre: " + lista.get(pos).nombre);
+            tvTitle.setText(lista.get(pos).nombre);
             //tvDesc.setText(desc[pos]);
 
             return listItem;

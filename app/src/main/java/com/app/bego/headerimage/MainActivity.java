@@ -234,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
                 if (position > 0) {
 
                     mProyecto = lista.get(position - 1);
-                    Intent i = new Intent(getBaseContext(), Proyecto.class);
+                    //Intent i = new Intent(getBaseContext(), Proyecto.class);
+                    Intent i = new Intent(getBaseContext(), Laboratorios.class);
                     startActivity(i);
                 }
 
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        setTitle("SDIP");
+        setTitle("ChckLabs");
 
         System.out.println("------------ DS -------------");
 
@@ -445,6 +446,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -486,6 +494,46 @@ public class MainActivity extends AppCompatActivity {
 
                         mProyecto = new MProyecto(inputName);
 
+                        //----------
+
+                            mProyecto.labQ.elementos.add(new Elementos("Q", "Vasos de precipitado"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Embudos"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Cristalizadores (Pirex)"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Matraces de fondo plano"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Matraces Erlenmeyer"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Cajas de Petri"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Vidrios de reloj"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Frascos para reactivos, tapón esmerilado"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Campanas de cristal"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Cajas de Portaobjetos"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Cajas de CubObjetos"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Tubos de Ensayo con Labio"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Frascos Gotero color Ámbar"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Gotero con Bulbo de Hule"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Probetas Graduadas"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Pipetas Graduadas"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "1/2 Kg. De Tubo de Vidrio de  6mm"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Lámparas de Alcohol"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Alcohol de 96°"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Ácido Clorhídico"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Ácidi Nítrico"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Ácido Acético"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Agua Oxigenada"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Aldehído Fórmico"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Azul de Metileno"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Bálsamo de  Canadá"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Éter Sulfúrico"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Licor de Fehling \"A\"."));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Lico de Fehiling  \"B\""));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Grenetina en Polvo"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Hematoxilina Preparada"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Hidróxido de Calcio"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Lugol"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Rojo Neutro"));
+                        mProyecto.labQ.elementos.add(new Elementos("Q", "Xilol"));
+
+                        //----------
+
                         lista.add(mProyecto);
 
                         String cade = g.toJson(lista);
@@ -503,7 +551,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         va.notifyDataSetChanged();
-                        Intent i = new Intent(getBaseContext(), Proyecto.class);
+                        //Intent i = new Intent(getBaseContext(), Proyecto.class);
+                        Intent i = new Intent(getBaseContext(), Laboratorios.class);
                         System.out.println(" 370 intento 2");
                         startActivity(i);
 
@@ -576,7 +625,7 @@ public class MainActivity extends AppCompatActivity {
             TextView tvDesc = (TextView) listItem.findViewById(R.id.etiqueta);
 
             // Set the views in the layout
-            iv.setBackgroundResource(R.drawable.check_boxes);
+            iv.setBackgroundResource(R.drawable.folder_search);
             tvTitle.setText(lista.get(pos).titulo);
             //tvDesc.setText(desc[pos]);
 
